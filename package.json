@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-node-polyfills",
+  "name": "@spazious/vite-plugin-node-polyfills",
   "type": "module",
   "version": "0.19.1",
   "packageManager": "pnpm@8.4.0",

@@ -88,9 +88,9 @@ export type PolyfillOptionsResolved = {
 }
 
 const globalShimsBanner = [
-  `import __buffer_polyfill from 'vite-plugin-node-polyfills/shims/buffer'`,
-  `import __global_polyfill from 'vite-plugin-node-polyfills/shims/global'`,
-  `import __process_polyfill from 'vite-plugin-node-polyfills/shims/process'`,
+  `import __buffer_polyfill from '@spazious/vite-plugin-node-polyfills/shims/buffer'`,
+  `import __global_polyfill from '@spazious/vite-plugin-node-polyfills/shims/global'`,
+  `import __process_polyfill from '@spazious/vite-plugin-node-polyfills/shims/process'`,
   ``,
   `globalThis.Buffer = globalThis.Buffer || __buffer_polyfill`,
   `globalThis.global = globalThis.global || __global_polyfill`,
@@ -106,7 +106,7 @@ const globalShimsBanner = [
  * ```ts
  * // vite.config.ts
  * import { defineConfig } from 'vite'
- * import { nodePolyfills } from 'vite-plugin-node-polyfills'
+ * import { nodePolyfills } from '@spazious/vite-plugin-node-polyfills'
  *
  * export default defineConfig({
  *   plugins: [
@@ -129,9 +129,9 @@ const globalShimsBanner = [
 export const nodePolyfills = (options: PolyfillOptions = {}): Plugin => {
   const require = createRequire(import.meta.url)
   const globalShimPaths = [
-    require.resolve('vite-plugin-node-polyfills/shims/buffer'),
-    require.resolve('vite-plugin-node-polyfills/shims/global'),
-    require.resolve('vite-plugin-node-polyfills/shims/process'),
+    require.resolve('@spazious/vite-plugin-node-polyfills/shims/buffer'),
+    require.resolve('@spazious/vite-plugin-node-polyfills/shims/global'),
+    require.resolve('@spazious/vite-plugin-node-polyfills/shims/process'),
   ]
   const optionsResolved: PolyfillOptionsResolved = {
     include: [],
@@ -157,15 +157,15 @@ export const nodePolyfills = (options: PolyfillOptions = {}): Plugin => {
 
   const toOverride = (name: ModuleNameWithoutNodePrefix): string | void => {
     if (isEnabled(optionsResolved.globals.Buffer, 'dev') && /^buffer$/.test(name)) {
-      return 'vite-plugin-node-polyfills/shims/buffer'
+      return '@spazious/vite-plugin-node-polyfills/shims/buffer'
     }
 
     if (isEnabled(optionsResolved.globals.global, 'dev') && /^global$/.test(name)) {
-      return 'vite-plugin-node-polyfills/shims/global'
+      return '@spazious/vite-plugin-node-polyfills/shims/global'
     }
 
     if (isEnabled(optionsResolved.globals.process, 'dev') && /^process$/.test(name)) {
-      return 'vite-plugin-node-polyfills/shims/process'
+      return '@spazious/vite-plugin-node-polyfills/shims/process'
     }
 
     if (name in optionsResolved.overrides) {
@@ -188,7 +188,7 @@ export const nodePolyfills = (options: PolyfillOptions = {}): Plugin => {
   }, {} as Record<ModuleName, string>)
 
   return {
-    name: 'vite-plugin-node-polyfills',
+    name: '@spazious/vite-plugin-node-polyfills',
     config: (config, env) => {
       const isDev = env.command === 'serve'
 
@@ -208,9 +208,9 @@ export const nodePolyfills = (options: PolyfillOptions = {}): Plugin => {
               {
                 ...inject({
                   // https://github.com/niksy/node-stdlib-browser/blob/3e7cd7f3d115ac5c4593b550e7d8c4a82a0d4ac4/README.md#vite
-                  ...(isEnabled(optionsResolved.globals.Buffer, 'build') ? { Buffer: 'vite-plugin-node-polyfills/shims/buffer' } : {}),
-                  ...(isEnabled(optionsResolved.globals.global, 'build') ? { global: 'vite-plugin-node-polyfills/shims/global' } : {}),
-                  ...(isEnabled(optionsResolved.globals.process, 'build') ? { process: 'vite-plugin-node-polyfills/shims/process' } : {}),
+                  ...(isEnabled(optionsResolved.globals.Buffer, 'build') ? { Buffer: '@spazious/vite-plugin-node-polyfills/shims/buffer' } : {}),
+                  ...(isEnabled(optionsResolved.globals.global, 'build') ? { global: '@spazious/vite-plugin-node-polyfills/shims/global' } : {}),
+                  ...(isEnabled(optionsResolved.globals.process, 'build') ? { process: '@spazious/vite-plugin-node-polyfills/shims/process' } : {}),
                 }),
               },
             ],
@@ -240,7 +240,7 @@ export const nodePolyfills = (options: PolyfillOptions = {}): Plugin => {
               // Supress the 'injected path "..." cannot be marked as external' error in Vite 4 (emitted by esbuild).
               // https://github.com/evanw/esbuild/blob/edede3c49ad6adddc6ea5b3c78c6ea7507e03020/internal/bundler/bundler.go#L1469
               {
-                name: 'vite-plugin-node-polyfills-shims-resolver',
+                name: '@spazious/vite-plugin-node-polyfills-shims-resolver',
                 setup(build) {
                   for (const globalShimPath of globalShimPaths) {
                     const globalShimsFilter = toRegExp(globalShimPath)
